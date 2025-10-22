@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  sec:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sec-tools
+    hostname: sec
+    
+    # Network configuration
+    network_mode: "host"
+    
+    # Capabilities for network scanning
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    
+    # Privileged mode for full network access (required for nmap, naabu)
+    privileged: true
+    
+    # Environment variables
+    environment:
+      - TERM=xterm-256color
+      - GOPATH=/root/go
+      - PATH=/root/go/bin:/usr/local/go/bin:${PATH}
+    
+    # Volumes for persistent data
+    volumes:
+      # Workspace - mount your local directory here
+      - ./workspace:/root/workspace
+      # Config files
+      - ./configs:/root/.config
+      # Results output
+      - ./results:/root/results
+      # Custom wordlists (optional)
+      - ./wordlists:/root/wordlists
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Command to run on startup
+    command: /bin/bash
+
+# Optional: separate network for isolated testing
+networks:
+  sec-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+
+# Volumes
+volumes:
+  workspace:
+  configs:
+  results:
+  wordlists:
