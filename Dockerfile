@@ -157,6 +157,9 @@ RUN echo "Installing Rust-based tools..." && \
 RUN echo "Installing SecLists wordlists..." && \
     git clone --depth 1 https://github.com/danielmiessler/SecLists.git /opt/SecLists
 
+# install impacket
+RUN pipx install impacket
+
 # ==================== FINAL SETUP ====================
 
 RUN mkdir -p /root/workspace /root/.config
