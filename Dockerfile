@@ -159,6 +159,7 @@ RUN echo "Installing SecLists wordlists..." && \
 
 # install impacket
 RUN pipx install impacket
+ENV PATH="${PATH}:/root/.local/share/pipx/venvs/impacket/bin"
 
 # ==================== FINAL SETUP ====================
 
